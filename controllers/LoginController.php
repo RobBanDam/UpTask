@@ -2,13 +2,19 @@
 
 namespace Controllers;
 
-class LoginController{
-    public static function login(){
-        echo "Desde Login";
+use MVC\Router;
 
+class LoginController{
+    public static function login(Router $router){
         if($_SERVER['REQUEST_METHOD'] === 'POST'){
             
         }
+
+
+        //  Render a la vista
+        $router->render('auth/login', [
+            'titulo' => "Iniciar Sesión"
+        ]);
     }
 
     public static function logout(){
@@ -17,12 +23,16 @@ class LoginController{
         
     }
 
-    public static function crear(){
-        echo "Desde Crear";
-
+    public static function crear(Router $router){
         if($_SERVER['REQUEST_METHOD']==='POST'){
 
         }
+
+
+        //  Render a la vista
+        $router->render('auth/crear', [
+            'titulo'=>"Crea tu Cuenta en UpTask"
+        ]);
     }
 
     public static function olvide(){
