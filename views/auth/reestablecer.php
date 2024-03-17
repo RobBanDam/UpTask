@@ -1,20 +1,10 @@
-<div class="contenedor login">
+<div class="contenedor reestablecer">
 	<?php include_once __DIR__ . '/../templates/nombre-sitio.php'; ?>
 
 	<div class="contenedor-sm">
-		<p class="descripcion-pagina">Iniciar Sesión</p>
+		<p class="descripcion-pagina">Coloca tu nueva contraseña</p>
 
-		<form class="formulario" method="post" action="/">
-			<div class="campo">
-				<label for="email">Email</label>
-				<input 
-					type="email"
-					id="email"
-					placeholder="Tu E-mail"
-					name="email"
-				/>
-			</div>
-
+		<form class="formulario" method="post" action="/reestablecer">
 			<div class="campo">
 				<label for="password">Password</label>
 				<input 
@@ -25,7 +15,7 @@
 				/>
 			</div>
 
-			<input type="submit" value="Iniciar Sesión" class="boton">
+			<input type="submit" value="Guardar Contraseña" class="boton">
 		</form>
 
 		<div class="acciones">
