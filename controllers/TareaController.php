@@ -7,7 +7,19 @@ use Model\Tarea;
 
 class TareaController{
     public static function index(){
+        session_start();
 
+        $proyectoId = $_GET['id'];
+
+        if(!$proyectoId) header('location: /dashboard');
+
+        $proyecto = Proyecto::where('url', $proyectoId);
+
+        if(!$proyecto || $proyecto->propietarioId !== $_SESSION['id']) header('location: /404');
+
+        $tareas = Tarea::belongsTo('proyectoId', $proyecto->id);
+
+        echo json_encode(['tareas' => $tareas]);
     }
 
     public static function crear(){
@@ -35,7 +47,8 @@ class TareaController{
             $respuesta = [
                 'tipo' => 'exito',
                 'id' => $resultado['id'],
-                'mensaje' => 'Tarea Creada Correctamente'
+                'mensaje' => 'Tarea Creada Correctamente',
+                'proyectoId' =>$proyecto->id
             ];
             echo json_encode($respuesta);
         }
