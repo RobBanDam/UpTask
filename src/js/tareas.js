@@ -3,8 +3,6 @@
     const nuevaTareaBtn = document.querySelector('#agregar-tarea')
     nuevaTareaBtn.addEventListener('click', mostrarFormulario)
 
-
-
     function mostrarFormulario(){
         const modal = document.createElement('DIV')
         modal.classList.add('modal')
@@ -43,8 +41,80 @@
                     modal.remove()
                 }, 500);
             }
+            if(e.target.classList.contains('submit-nueva-tarea')){
+                submitFormularioNuevaTarea()
+            }
         })
 
-        document.querySelector('body').appendChild(modal);
+        document.querySelector('.dashboard').appendChild(modal);
+    }
+
+    function submitFormularioNuevaTarea(){
+        const tarea = document.querySelector('#tarea').value.trim();
+        
+        if (tarea === ''){
+            //  Mostrar una alerta de error
+            mostrarAlerta('El Nombre de la Tarea es Obligatoria', 'error', document.querySelector('.formulario legend'));
+            return;
+        }
+
+        agregarTarea(tarea);
+    }
+
+    //  Muestra un mensaje en la interfaz
+    function mostrarAlerta(mensaje, tipo, referencia){
+        //  Previene la creacion de multiples alertas
+        const alertaPrevia = document.querySelector('.alerta');
+        if(alertaPrevia){
+            alertaPrevia.remove();
+        }
+
+        const alerta = document.createElement('DIV');
+        alerta.classList.add('alerta', tipo);
+        alerta.textContent = mensaje;
+
+        //  Inserta la alerta antes del Legend
+        referencia.parentElement.insertBefore(alerta, referencia.nextElementSibling);
+
+        //  Eliminar la alerta
+        setTimeout(() => {
+            alerta.remove();
+        }, 3000);
+    }
+
+    //  Consultar el Server para añadir una nueva tarea al proyecto actual
+    async function agregarTarea(tarea){
+        //  Construir la Petición
+        const datos = new FormData();
+        datos.append('nombre', tarea);
+        datos.append('proyectoId', obtenerProyecto());
+
+        try {
+            const url = 'http://localhost:3000/api/tarea';
+            const respuesta = await fetch(url, {
+                method: 'POST',
+                body: datos
+            });
+            
+            const resultado = await respuesta.json();
+
+            mostrarAlerta(resultado.mensaje, resultado.tipo, document.querySelector('.formulario legend'));
+
+            if(resultado.tipo === 'exito'){
+                const modal = document.querySelector('.modal');
+                setTimeout(() => {
+                    modal.remove();
+                }, 3000);
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    function obtenerProyecto(){
+        const proyectoparams = new URLSearchParams(window.location.search);
+        const proyecto = Object.fromEntries(proyectoparams.entries());
+        return proyecto.id;
     }
 })();
