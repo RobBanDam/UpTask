@@ -74,7 +74,7 @@
 
             const nombreTarea = document.createElement('P');
             nombreTarea.textContent = tarea.nombre;
-            nombreTarea.ondblclick = function(){
+            nombreTarea.onclick = function(){
                 mostrarFormulario(editar = true, {...tarea});
             }
 
@@ -88,7 +88,7 @@
             btnEstadoTarea.textContent = estados[tarea.estado];
             btnEstadoTarea.dataset.estadoTarea = tarea.estado;
             //  Evento para cambiar el estado
-            btnEstadoTarea.ondblclick = function(){
+            btnEstadoTarea.onclick = function(){
                 cambiarEstadoTarea({...tarea});
             }
 
@@ -97,7 +97,7 @@
             btnEliminarTarea.dataset.idTarea = tarea.id;
             btnEliminarTarea.textContent = 'Eliminar';
             //  Evento para eliminar la tarea
-            btnEliminarTarea.ondblclick = function(){
+            btnEliminarTarea.onclick = function(){
                 confirmarEliminarTarea({...tarea});
             }
 
@@ -135,7 +135,7 @@
     }
 
     function mostrarFormulario(editar = false, tarea = {}){
-        console.log(tarea);
+        //console.log(tarea);
         const modal = document.createElement('DIV')
         modal.classList.add('modal')
         modal.innerHTML = `
