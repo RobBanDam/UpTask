@@ -13,6 +13,8 @@ class Usuario extends ActiveRecord{
         $this->email = $args['email'] ?? '';
         $this->password = $args['password'] ?? '';
         $this->password2 = $args['password2'] ?? '';
+        $this->password_actual = $args['password_actual'] ?? '';
+        $this->password_nueva = $args['password_nueva'] ?? '';
         $this->token = $args['token'] ?? '';
         $this->confirmado = $args['confirmado'] ?? 0;
     }
@@ -85,13 +87,43 @@ class Usuario extends ActiveRecord{
         return self::$alertas;
     }
 
+    //  Valida el perfil del Usuario
+    public function validar_perfil(){
+        if(!$this->nombre){
+            self::$alertas['error'][] = 'El Nombre es Obligatorio';
+        }
+        if(!$this->email){
+            self::$alertas['error'][] = 'El Correo es Obligatorio';
+        }
+        return self::$alertas;
+    }
+
+    //  Comprueba si los datos de inicio de sesión son correctos
+    public function nuevo_password() : array {
+        if(!$this->password_actual){
+            self::$alertas['error'][] = 'La Contraseña Actual no Puede ir Vacía.';
+        }
+        if(!$this->password_nueva){
+            self::$alertas['error'][] = 'La Nueva Contraseña no Puede ir Vacía.';
+        }
+        if(strlen($this->password_nueva) < 6){
+            self::$alertas['error'][] = 'La Contraseña Debe Contener Al Menos 6 Caracteres.';
+        }
+        return self::$alertas;
+    }
+
+    //  Comprueba la nueva contraseña
+    public function comprobar_password() : bool {
+        return password_verify($this->password_actual, $this->password);
+    }
+
     //  Hashea el Password
-    public function hashPassword(){
+    public function hashPassword() : void {
         $this->password = password_hash($this->password, PASSWORD_BCRYPT);
     }
 
     //  Generar un Token
-    public function generarToken(){
+    public function generarToken() : void {
         $this->token = uniqid();
     }
 }
